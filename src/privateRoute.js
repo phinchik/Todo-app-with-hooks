@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom'
 
 const PrivateRouteCurry = (isLoggedIn) => {
     return ({ component: Component, ...rest }) => {
+        console.log('HERE @@@@@@@')
         return (
             <Route
                 {...rest}
@@ -10,6 +11,7 @@ const PrivateRouteCurry = (isLoggedIn) => {
                     if (!isLoggedIn) {
                         return <Redirect to="/login" />
                     } else {
+                        console.log('PrivateRouteCurry display Component')
                         return <Component {...rest} {...props} />
                     }
                 }} />

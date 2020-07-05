@@ -10,28 +10,37 @@ const Login = ({ history }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-
-    console.log('RENDER LOGIN @@@@@')
     const goToSignup = () => {
         history.push('/signup')
     }
 
+    const handleLogin = () => {
+        const allUsers = JSON.parse(localStorage.getItem('users')) || {}
+        if (allUsers && allUsers[username]) {
+            const userDetails = allUsers[username]
+            if (userDetails.password === password) {
+                localStorage.setItem('userLoggedIn', username)
+                history.push('/projects')
+            } else {
+                console.log("password is wrong")
+            }
+        } else {
+            console.log("email does not exist")
+        }
+    }
+
+
+
     const validateInput = username !== '' && password !== ''
     return (
         <div>
-            {/* <h1>Login</h1>
-            <input placeholder="Username..." />
-            <input placeholder="Password..." />
-            <button>Login</button>
-
-            <p onClick={goToSignup}>Don't have an account?</p> */}
             <Container style={{ margin: '0 auto' }}>
-
                 <Row className="justify-content-md-center">
                     <Col xs={12} sm={12} md={8} lg={6} >
                         <Card border="primary" style={{
                             width: '100%', margin: '10rem auto', padding: '20px'
                         }}>
+                            <Card.Header>Login</Card.Header>
                             <Form>
                                 <Form.Group controlId="formBasicEmail">
                                     <Form.Label>Email address</Form.Label>
@@ -48,7 +57,7 @@ const Login = ({ history }) => {
                                         Don't have an account?
                             </Form.Text>
                                 </Form.Group>
-                                <Button variant={validateInput ? "primary" : "secondary"} type="submit">
+                                <Button onClick={handleLogin} variant={validateInput ? "primary" : "secondary"} >
                                     Submit
                             </Button>
                             </Form>
