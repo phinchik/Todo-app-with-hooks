@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const signUp = (allUsers, newUser) => {
     return (dispatch) => {
-        const updatedUsers = { ...allUsers, [newUser.username]: newUser }
+        const updatedUsers = { ...allUsers, [newUser.userId]: newUser }
         const projectId = uuidv4()
         const projects = {
             [projectId]: {

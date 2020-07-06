@@ -1,10 +1,16 @@
 import {
     SIGN_UP_SUCCESS,
-    GET_PROJECTS_SUCCESS
+    GET_PROJECTS_SUCCESS,
+    SAVE_PROJECT_SUCCESS,
+    VIEW_PROJECT,
+    DELETE_TODO_SUCCESS,
+    UPDATE_VIEW_PROJECT,
+    DELETE_PROJECT_SUCCESS
 } from '../actions/types'
 
 const initialState = {
     list: [],
+    viewingProject: null
 }
 
 export default (state = initialState, action) => {
@@ -21,6 +27,30 @@ export default (state = initialState, action) => {
                 list: action.payload
             }
         }
+        case SAVE_PROJECT_SUCCESS: {
+            return {
+                ...state,
+                list: action.payload
+            }
+        }
+        case VIEW_PROJECT: {
+            return {
+                ...state,
+                viewingProject: action.payload
+            }
+        }
+        case UPDATE_VIEW_PROJECT:
+        case DELETE_TODO_SUCCESS: {
+            return {
+                ...state,
+                viewingProject: action.payload
+            }
+        }
+        case DELETE_PROJECT_SUCCESS:
+            return {
+                ...state,
+                list: state.list.filter(project => project.id !== action.payload)
+            }
         default:
             return state
     }

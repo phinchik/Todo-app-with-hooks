@@ -4,6 +4,7 @@ import history from './history'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import Projects from './components/Projects'
+import ViewProject from './components/ViewProject'
 import { connect } from 'react-redux'
 // import PublicRouteCurry from './publicRoute'
 // import PrivateRouteCurry from './privateRoute'
@@ -24,6 +25,7 @@ const AppRoutes = ({ setLoggedInUser }) => {
             <BrowserRouter history={history}>
                 <Switch>
                     <Route path='/projects' exact={true} component={Projects} />
+                    <Route path='/projects/:id' exact={true} component={ViewProject} />
                     <Route path='/login' exact={true} component={Login} />
                     <Route path='/signup' exact={true} component={Signup} />
                 </Switch>
