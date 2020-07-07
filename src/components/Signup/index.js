@@ -8,7 +8,9 @@ import Row from 'react-bootstrap/Row'
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import { v4 as uuidv4 } from 'uuid';
+import { withRouter } from 'react-router-dom'
 import { passwordValidator, validateMinimum, validateUpperCase, validateLowerCase, validateNumber, validateSpecialCharacter } from "../../helpers/passwordValidator"
+import './index.scss'
 
 const Signup = ({ history, signUpUser }) => {
     const [username, setUsername] = useState('')
@@ -18,19 +20,19 @@ const Signup = ({ history, signUpUser }) => {
         history.push('/login')
     }
 
-
     const handleSignUp = () => {
         const allUsers = JSON.parse(localStorage.getItem('users')) || {}
         if (allUsers && allUsers[username]) {
-            // email already taken
+            alert('email already taken')
         } else {
             if (passwordValidator(password)) {
                 const newUser = {
                     username, password, userId: uuidv4()
                 }
                 signUpUser(allUsers, newUser)
+                history.push('/projects')
             } else {
-                console.log("put some error msg")
+                alert('invalid password')
             }
 
         }
@@ -44,13 +46,11 @@ const Signup = ({ history, signUpUser }) => {
     const hasSpecialChar = validateSpecialCharacter(password)
     return (
         <div>
-            <Container style={{ margin: '0 auto' }}>
+            <Container>
                 <Row className="justify-content-md-center">
                     <Col xs={12} sm={12} md={8} lg={6} >
-                        <Card border="primary" style={{
-                            width: '100%', margin: '10rem auto', padding: '20px'
-                        }}>
-                            <Card.Header>Sign up</Card.Header>
+                        <Card border="primary" className='signupContainer'>
+                            <h1>Signup</h1>
                             <Form>
                                 <Form.Group controlId="formBasicEmail">
                                     <Form.Label>Email address</Form.Label>
@@ -92,4 +92,4 @@ const mapDispatchToProps = {
     signUpUser: signUp
 }
 
-export default connect(null, mapDispatchToProps)(Signup)
+export default withRouter(connect(null, mapDispatchToProps)(Signup))

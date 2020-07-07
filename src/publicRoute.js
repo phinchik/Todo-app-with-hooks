@@ -1,21 +1,23 @@
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom'
 
-import React from 'react'
-import { Route } from 'react-router-dom'
+export default function (ComposedComponent) {
+    class PublicRoute extends React.Component {
+        render() {
+            if (this.props.loggedInUser) {
+                return <Redirect to='/projects' />
+            }
 
-const PublicRouteCurry = (loggedIn, history) => {
-    return ({ component: Component, ...rest }) => {
-        return (
-            <Route
-                {...rest}
-                render={props => {
-                    if (loggedIn) {
-                        history.push('/projects')
-                    } else {
-                        return <Component {...rest} {...props} />
-                    }
-                }} />
-        )
+            return <ComposedComponent {...this.props} />
+        }
     }
-}
 
-export default PublicRouteCurry
+    const mapStateToProps = (state) => {
+        return {
+            loggedInUser: state.auth.loggedInUser
+        };
+    };
+
+    return connect(mapStateToProps)(PublicRoute);
+}

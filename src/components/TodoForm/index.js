@@ -1,32 +1,50 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import { getItemFromLocalStorage } from '../../redux/actions/helper'
+import './index.scss'
 
-const TodoForm = ({ setTodoDetail, selectState, updateTodo, datepicker, addTodo, addingATodo }) => {
+const TodoForm = ({ editTodo, addTodo, data, edit }) => {
+    useEffect(() => {
+        // refactor... all we are trying to do is get todo data to edit
+        const projects = getItemFromLocalStorage('projects')
+        const project = projects[edit?.projectId]
+        const viewingTodo = project?.todos?.find((todo) => {
+            return todo.id !== edit?.id
+        })
+
+        if (viewingTodo) {
+            setTodoDetails({
+                description: viewingTodo.description,
+                title: viewingTodo.title,
+                selectState: data?.laneId,
+                date: new Date()
+            })
+        }
+    }, [])
+
     const todoInitialState = {
         description: '',
         title: '',
-        selectState,
+        selectState: data?.laneId,
         date: new Date()
     }
 
     const [todoDetails, setTodoDetails] = useState(todoInitialState)
-    const { title, description } = todoDetails
-
 
     return (
-        <div style={{ padding: '8px', borderRadius: '4px', background: 'white' }}>
+        <div className='todoFormContainer'>
             <Form>
                 <Form.Group>
                     <Form.Label>Title</Form.Label>
-                    <Form.Control id='title' value={title} onChange={(e) => setTodoDetails({ ...todoDetails, title: e.target.value })} placeholder="Enter title" />
+                    <Form.Control id='title' value={todoDetails.title} onChange={(e) => setTodoDetails({ ...todoDetails, title: e.target.value })} placeholder="Enter title" />
                 </Form.Group>
 
                 <Form.Group>
                     <Form.Label>Description</Form.Label>
-                    <Form.Control id='description' value={description} onChange={(e) => setTodoDetails({ ...todoDetails, description: e.target.value })} placeholder="Enter description" />
+                    <Form.Control id='description' value={todoDetails.description} onChange={(e) => setTodoDetails({ ...todoDetails, description: e.target.value })} placeholder="Enter description" />
                 </Form.Group>
 
                 <Form.Group>
@@ -38,28 +56,9 @@ const TodoForm = ({ setTodoDetail, selectState, updateTodo, datepicker, addTodo,
                         onSelect={(e) => setTodoDetails({ ...todoDetails, date: e })} />
                 </Form.Group>
 
-                <Button onClick={() => addTodo(todoDetails)} variant='secondary'>Add</Button>
+                <Button onClick={() => edit ? editTodo(todoDetails) : addTodo(todoDetails)} variant='secondary'>{edit ? 'Update' : 'Add'}</Button><br />
             </Form>
-
-
         </div>
-
-        // <>
-        //     Title <input id='title' value={title} onChange={e => setTodoDetail(e)} /><br />
-        //             Description <input id='description' value={description} onChange={e => setTodoDetail(e)} /><br />
-        //           Due Date <DatePicker selected={startDate} onSelect={(e, x) => {
-        //         setTodoDetail(e, 'datepicker')
-        //     }
-        //     } />
-        //             State <select id='selectState' value={selectState} onChange={e => setTodoDetail(e)} >
-        //         <option value='todo'>TODO</option>
-        //         <option value='progress'>In Progress</option>
-        //         <option value='done'>Done</option>
-        //     </select>
-        //     <br />
-        //     <button onClick={addingATodo ? addTodo : updateTodo}>Update Todo</button>
-        //     <br />
-        // </>
     )
 }
 

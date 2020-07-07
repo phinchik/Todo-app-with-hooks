@@ -1,6 +1,7 @@
 // auth
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS'
 export const SET_LOGGED_IN_USER = "SET_LOGGED_IN_USER"
+export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
 
 // projects
 export const GET_PROJECTS_SUCCESS = 'GET_PROJECTS_SUCCESS'

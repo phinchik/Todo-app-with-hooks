@@ -6,40 +6,39 @@ import Signup from './components/Signup'
 import Projects from './components/Projects'
 import ProjectDetails from './components/ProjectDetails'
 import { connect } from 'react-redux'
-// import PublicRouteCurry from './publicRoute'
-// import PrivateRouteCurry from './privateRoute'
 import { setLoggedInUser } from './redux/actions/auth'
-
+import Container from 'react-bootstrap/Container'
+import NavBar from './components/NavBar'
+import privateRoute from './privateRoute'
+import publicRoute from './publicRoute'
+import './index.scss'
 
 const AppRoutes = ({ setLoggedInUser }) => {
 
     useEffect(() => {
-        const loggedInUser = JSON.parse(localStorage.getItem('userLoggedIn'))
+        const user = localStorage.getItem('userLoggedIn')
+        const loggedInUser = user && JSON.parse(user)
         if (loggedInUser) {
             setLoggedInUser(loggedInUser)
         }
     }, [])
 
     return (
-        <div style={{ padding: '100px' }}>
-            <BrowserRouter history={history}>
-                <Switch>
-                    <Route path='/projects' exact={true} component={Projects} />
-                    <Route path='/projects/:id' exact={true} component={ProjectDetails} />
-                    <Route path='/login' exact={true} component={Login} />
-                    <Route path='/signup' exact={true} component={Signup} />
-                    <Route path='/' exact={true} component={Login} />
-                </Switch>
-            </BrowserRouter>
-        </div>
+        <BrowserRouter history={history}>
+            <Switch>
+                <div style={{ background: 'dodgerblue' }}>
+                    <NavBar />
+                    <Container fluid={true} className='container'>
+                        <Route path='/projects' exact={true} component={privateRoute(Projects)} />
+                        <Route path='/projects/:id' exact={true} component={privateRoute(ProjectDetails)} />
+                        <Route path='/login' exact={true} component={publicRoute(Login)} />
+                        <Route path='/signup' exact={true} component={publicRoute(Signup)} />
+                    </Container>
+                </div>
+            </Switch>
+        </BrowserRouter>
     )
 }
-
-// const mapStateToProps = state => {
-//     return {
-//         loggedInUser: state.auth.loggedInUser,
-//     }
-// }
 
 const mapDispatchToProps = {
     setLoggedInUser,

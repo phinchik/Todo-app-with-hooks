@@ -1,10 +1,9 @@
-.topContainer {
+.projectHeader {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 80px;
 }
 
-.projectsTitle {
-    color: white;
+.projectContainer {
+    margin: 2rem auto;
 }

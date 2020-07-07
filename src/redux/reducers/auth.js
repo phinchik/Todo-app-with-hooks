@@ -1,6 +1,7 @@
 import {
     SIGN_UP_SUCCESS,
-    SET_LOGGED_IN_USER
+    SET_LOGGED_IN_USER,
+    LOG_OUT_SUCCESS
 } from '../actions/types'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,6 +21,12 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 loggedInUser: action.payload,
+            }
+        }
+        case LOG_OUT_SUCCESS: {
+            return {
+                ...state,
+                loggedInUser: null
             }
         }
         default:

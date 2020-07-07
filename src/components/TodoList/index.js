@@ -4,32 +4,25 @@ import TodoForm from '../TodoForm'
 import { v4 as uuidv4 } from 'uuid'
 import MultiSelect from "react-multi-select-component"
 import Board from 'react-trello'
-import { connect } from 'react-redux'
-import { updateViewProject } from '../../redux/actions/projects'
 import './index.scss'
 import moment from "moment";
-import Modal from 'react-bootstrap/Modal'
 import Card from 'react-bootstrap/Card'
+import EditTodoModal from '../EditTodoModal'
 
-// e.toISOString().slice(0, 10)
-const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, updateViewProject, projectName, projectDetailPage }) => {
+const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName, saveProject }) => {
     const [selected, setSelected] = useState([]);
     const [sortBy, setSortBy] = useState('title')
     const [addingTodo, setAddingTodo] = useState(false)
-    const [addingATodo, setAddingATodo] = useState(false)
 
     const todoInitialState = {
         description: '',
         title: '',
-        selectState: 'todo',
+        selectState: '',
         date: null
     }
 
     const [todoDetails, setTodoDetails] = useState(todoInitialState)
 
-    useEffect(() => {
-
-    }, [todos])
     const setTodoDetail = (e, id) => {
 
         const key = e.target.id
@@ -41,20 +34,18 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
         })
     }
 
-    const addTodo = (todoDetails) => {
-        const { description, title, selectState, date } = todoDetails
+    const addTodo = (details) => {
+        const { description, title, selectState, date } = details
 
         const newTodo = {
             description,
             title,
-            state: selectState,
+            selectState,
             id: uuidv4(),
             userId: loggedInUser.userId,
             project: projectId,
             date
         }
-
-        console.log('newTodo -->', newTodo)
 
         const updatedTodos = [
             ...todos,
@@ -62,13 +53,6 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
         ]
 
         onHandleSaveProject(updatedTodos)
-
-        setTodos(updatedTodos)
-
-        // if (updateViewProject) {
-        //     console.log("hereee")
-        //     updateViewProject(updatedTodos)
-        // }
 
         setTodoDetails({
             description: '',
@@ -111,10 +95,7 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
             }
             return todo
         })
-        setTodos(updatedTodos)
-        if (projectDetailPage) {
-            onHandleSaveProject(updatedTodos)
-        }
+        onHandleSaveProject(updatedTodos)
     }
 
     const handleCardAdd = (card, laneId) => {
@@ -129,6 +110,7 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
             description: card.description,
             title: card.title,
             state: laneId,
+            selectState: laneId,
             id: card.id,
             userId: loggedInUser.userId,
             project: projectId
@@ -138,16 +120,12 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
             newTodo
         ]
 
-        setTodos(updatedTodos)
-
         setTodoDetails({
             description: '',
             title: '',
             selectState: 'todo'
         })
-        if (projectDetailPage) {
-            onHandleSaveProject(updatedTodos)
-        }
+        onHandleSaveProject(updatedTodos)
 
 
     }
@@ -157,15 +135,16 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
             name: projectName,
             id: projectId,
             userId: loggedInUser.userId,
-            todos: updatedTodos || todos,
+            todos: updatedTodos,
             date: todoDetails.date
         }
-        updateViewProject(updatedProject)
+
+        saveProject(updatedProject)
     }
 
     const getCards = (id) => {
         const filteredList = todoList.filter((todo) => {
-            return todo.state === id
+            return todo.selectState === id
         })
 
         return filteredList
@@ -199,7 +178,8 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
         const todoDetails = filteredList[0]
         setTodoDetails({
             ...todoDetails,
-            id: cardId
+            id: cardId,
+            selectState: laneId
         })
         setAddingTodo(!addingTodo)
     }
@@ -217,10 +197,19 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
         setAddingTodo(!addingTodo)
     }
 
+    const [edittingForm, setEdittingForm] = useState(null)
+    const editForm = (data) => {
+        setEdittingForm(data)
+    }
+
     const components = {
-        NewCardForm: () => <TodoForm addingATodo={addingATodo} updateTodo={updateTodo} addTodo={addTodo} setTodoDetail={setTodoDetail} {...todoDetails} />,
+        NewCardForm: (data) => {
+            return <TodoForm selectState={data.laneId} updateTodo={updateTodo} addTodo={addTodo} setTodoDetail={setTodoDetail} {...todoDetails} data={data} />
+        },
         NewLaneSection: () => <p>NewLane</p>,
-        Card: (x) => {
+        Card: (x, y) => {
+            const cardId = x.id
+            const laneId = x.laneId
             return (
                 <div style={{ background: 'white', margin: '0.5rem 0' }}>
                     <Card style={{ width: '18rem' }}>
@@ -232,6 +221,8 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
                             <footer>
                                 Due Date: {x && moment(x.date).format("YYYY/MM/DD")}
                             </footer>
+                            <a href='#' onClick={() => editForm(x)}>edit</a><br />
+                            <a href='#' onClick={() => x.onDelete(cardId, laneId)}>delete</a>
                         </Card.Body>
 
                     </Card>
@@ -242,43 +233,25 @@ const TodoList = ({ todos = [], setTodos, loggedInUser, projectId, deleteTodo, u
 
     return (
         <div>
-
-            {todoList && todoList.length > 0 && <div>
-                <p>Sort by:</p>
-                <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
-                    <option value='title'>Title</option>
-                    <option value='description'>Description</option>
-                </select>
-                <p>Filter state:</p>
-                {options && <MultiSelect
-                    options={options}
-                    value={selected}
-                    onChange={setSelected}
-                    disableSearch={true}
-                />}
-            </div>}
+            <EditTodoModal
+                updateTodo={updateTodo}
+                addTodo={addTodo}
+                setTodoDetail={setTodoDetail}
+                {...todoDetails}
+                edittingForm={edittingForm}
+                setEdittingForm={setEdittingForm} />
 
             <Board
                 draggable
                 data={data}
                 onCardDelete={onCardDelete}
                 onCardMoveAcrossLanes={onCardMoveAcrossLanes}
-                onCardAdd={() => {
-                    handleCardAdd()
-                    setAddingATodo(true)
-                }}
-                onCardClick={(cardId, metadata, laneId) => onHandleTodoCard(cardId, metadata, laneId)}
                 editable
-                style={{ height: '600px', background: 'white' }}
-                // style={{ width: '80%', margin: '5rem auto', height: '60vh', overflow: 'auto' }}
+                className='board'
                 components={components}
             />
-        </div>
+        </div >
     )
 }
 
-const mapDispatchToProps = {
-    updateViewProject
-}
-
-export default connect(null, mapDispatchToProps)(TodoList)
+export default TodoList

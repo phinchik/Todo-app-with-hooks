@@ -14,8 +14,8 @@ export const saveProject = (project) => {
         const allProjects = getItemFromLocalStorage('projects')
         const updatedProjects = { ...allProjects, [project.id]: project }
         saveToLocalStorage([{ key: 'projects', value: updatedProjects }])
-
-        dispatch({ type: SAVE_PROJECT_SUCCESS, payload: Object.values(updatedProjects) })
+        console.log('saved to local storage')
+        dispatch({ type: SAVE_PROJECT_SUCCESS, payload: { project, list: Object.values(updatedProjects) } })
 
     }
 }
@@ -43,8 +43,6 @@ export const updateViewProject = (project) => {
     const updatedProjects = { ...projects, [project.id]: project }
 
     saveToLocalStorage([{ key: 'projects', value: updatedProjects }])
-
-
     return dispatch => {
         dispatch({ type: UPDATE_VIEW_PROJECT, payload: project, updatedList: Object.values(updatedProjects) })
     }

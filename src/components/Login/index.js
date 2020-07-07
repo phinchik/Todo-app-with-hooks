@@ -5,8 +5,10 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
+import { setLoggedInUser } from '../../redux/actions/auth'
+import { connect } from 'react-redux'
 
-const Login = ({ history }) => {
+const Login = ({ history, setLoggedInUser }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -19,17 +21,15 @@ const Login = ({ history }) => {
         if (allUsers && allUsers[username]) {
             const userDetails = allUsers[username]
             if (userDetails.password === password) {
-                localStorage.setItem('userLoggedIn', username)
-                history.push('/projects')
+                localStorage.setItem('userLoggedIn', JSON.stringify(userDetails))
+                setLoggedInUser(userDetails)
             } else {
-                console.log("password is wrong")
+                alert('wrong password')
             }
         } else {
-            console.log("email does not exist")
+            alert('email does not exist')
         }
     }
-
-
 
     const validateInput = username !== '' && password !== ''
     return (
@@ -40,7 +40,7 @@ const Login = ({ history }) => {
                         <Card border="primary" style={{
                             width: '100%', margin: '10rem auto', padding: '20px'
                         }}>
-                            <Card.Header>Login</Card.Header>
+                            <h1>Login</h1>
                             <Form>
                                 <Form.Group controlId="formBasicEmail">
                                     <Form.Label>Email address</Form.Label>
@@ -72,5 +72,8 @@ const Login = ({ history }) => {
         </div>
     )
 }
+const mapDispatchToProps = {
+    setLoggedInUser,
+}
 
-export default Login
+export default connect(null, mapDispatchToProps)(Login)

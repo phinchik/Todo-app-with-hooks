@@ -30,7 +30,8 @@ export default (state = initialState, action) => {
         case SAVE_PROJECT_SUCCESS: {
             return {
                 ...state,
-                list: action.payload
+                list: action.payload.list,
+                viewingProject: action.payload.project
             }
         }
         case VIEW_PROJECT: {

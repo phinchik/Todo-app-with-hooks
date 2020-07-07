@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { v4 as uuidv4 } from 'uuid'
 import { connect } from 'react-redux'
-import TodoList from '../TodoList'
 import { saveProject, deleteTodo, updateViewProject } from '../../redux/actions/projects'
 import Form from 'react-bootstrap/Form'
 
@@ -11,17 +10,15 @@ const AddProjectModal = ({ show, handleClose, loggedInUser, addProject, editedPr
     const [projectId, setProjectId] = useState('')
     const [projectName, setProjectName] = useState('')
     const [todos, setTodos] = useState([])
-    // const [editProject, setEditProject] = useState(false)
     const [projectDescription, setProjectDescription] = useState('')
 
 
     useEffect(() => {
         if (editedProjectData) {
-            const { id, name, todos, userId } = editedProjectData
+            const { id, name, todos } = editedProjectData
             setProjectId(id)
             setProjectName(name)
             setTodos(todos)
-            // setEditProject(true)
         }
 
     }, [editedProjectData])
@@ -35,7 +32,7 @@ const AddProjectModal = ({ show, handleClose, loggedInUser, addProject, editedPr
             todos
         }
         if (projectName === '') {
-            console.log('Please fill out name')
+            alert('please fill out name')
         } else {
             addProject(project)
             onhandleModalClose()
@@ -48,28 +45,7 @@ const AddProjectModal = ({ show, handleClose, loggedInUser, addProject, editedPr
         setProjectName('')
         setTodos([])
         setProjectDescription('')
-        // setEditProject(false)
     }
-
-
-    // const deleteInternalTodo = (todoId, projectId) => {
-    //     const filteredTodos = todos && todos.filter((todo) => {
-    //         return todo.id !== todoId
-    //     })
-    //     setTodos(filteredTodos)
-    // }
-
-    // const updateProject = () => {
-    //     const project = {
-    //         name: projectName,
-    //         id: editedProjectData.id,
-    //         userId: loggedInUser.userId,
-    //         decsription: projectDescription,
-    //         todos
-    //     }
-    //     updateViewProject(project)
-    //     onhandleModalClose()
-    // }
 
     return (
         <Modal size="xl" show={show} onHide={onhandleModalClose}>
@@ -87,32 +63,14 @@ const AddProjectModal = ({ show, handleClose, loggedInUser, addProject, editedPr
                         <Form.Control value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} placeholder="Enter description..." />
                     </Form.Group>
                 </Form>
-
-                {/* Name <input value={projectName} onChange={e => setProjectName(e.target.value)} />
-                <div>Description: <input value={projectDescription} onChange={e => setProjectDescription(e.target.value)} /></div>
-
-                <h3>Todos</h3> */}
-                {/* <Form.Group>
-                    <Form.Label>Create a list of todos for this project:</Form.Label>
-
-                    <TodoList
-                        todos={todos}
-                        loggedInUser={loggedInUser}
-                        setTodos={setTodos}
-                        projectId={projectId}
-                        deleteTodo={deleteTodo}
-                        projectName={projectName}
-                        updateViewProject={updateViewProject} />
-                </Form.Group> */}
-
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onhandleModalClose}>
                     Close
                     </Button>
-                <Button onClick={saveProject} variant="primary"> {/* editProject */}
+                <Button onClick={saveProject} variant="primary">
                     Save Changes
-                    </Button>
+                </Button>
             </Modal.Footer>
         </Modal>
     )

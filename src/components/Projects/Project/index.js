@@ -4,34 +4,37 @@ import { viewProject, deleteProject } from '../../../redux/actions/projects'
 import { connect } from 'react-redux'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
+import './index.scss'
 
-const Project = ({ name, decsription, todos, history, id, viewProject, deleteProject, creator }) => {
+const Project = ({ name, decsription, todos, history, id, viewProject, deleteProject }) => {
     const goToProject = () => {
         const project = {
             name,
             todos,
-            id
+            id,
+            decsription
         }
         viewProject(project)
         history.push(`/projects/${id}`)
     }
 
     return (
-        <div>
-            <Card style={{ margin: '2rem auto' }}>
-                <Card.Header as="h5">Name: {name}</Card.Header>
+        <>
+            <Card className='projectContainer'>
+                <Card.Header>
+                    <div className='projectHeader'>
+                        <h5>{name}</h5>
+                        <Button onClick={() => deleteProject(id)} variant='danger'>Delete</Button>
+                    </div>
+                </Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        Description: {decsription}
-                    </Card.Text>
-                    <Card.Text>
-                        {`Number of todos: ${todos && todos.length}`}
-                        <Button onClick={() => goToProject()} variant="primary">View Project</Button>
-                        <Button onClick={() => deleteProject(id)} variant="primary">Delete Project</Button>
+                        <p>{decsription}</p>
+                        <a href='#' onClick={() => goToProject()}>View</a>
                     </Card.Text>
                 </Card.Body>
             </Card>
-        </div>
+        </>
     )
 }
 

@@ -1,20 +1,23 @@
-import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom'
 
-const PrivateRouteCurry = (isLoggedIn) => {
-    return ({ component: Component, ...rest }) => {
-        return (
-            <Route
-                {...rest}
-                render={props => {
-                    if (!isLoggedIn) {
-                        return <Redirect to="/login" />
-                    } else {
-                        return <Component {...rest} {...props} />
-                    }
-                }} />
-        )
+export default function (ComposedComponent) {
+    class Authenticate extends React.Component {
+        render() {
+            if (!this.props.loggedInUser) {
+                return <Redirect to='/login' />
+            }
+
+            return <ComposedComponent {...this.props} />
+        }
     }
-}
 
-export default PrivateRouteCurry
+    const mapStateToProps = (state) => {
+        return {
+            loggedInUser: state.auth.loggedInUser
+        };
+    };
+
+    return connect(mapStateToProps)(Authenticate);
+}

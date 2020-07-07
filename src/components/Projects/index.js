@@ -3,16 +3,11 @@ import { connect } from 'react-redux';
 import { getProjectList } from '../../redux/actions/projects'
 import Project from './Project'
 import AddProjectModal from '../AddProjectModal'
-import MultiSelect from "react-multi-select-component"
-import { getItemFromLocalStorage } from '../../redux/actions/helper'
 import './index.scss'
 import Button from 'react-bootstrap/Button'
 
 const Projects = ({ projects, getProjects }) => {
-    const users = getItemFromLocalStorage('users')
-    // const usersForSelect = Object.values(getItemFromLocalStorage('users')).map((user) => ({ label: user.username, value: user.userId }))
     const [show, setShow] = useState(false);
-    // const [selected, setSelected] = useState([]);
     const [editedProjectData, setEditedProjectData] = useState('')
 
     const handleClose = () => {
@@ -34,24 +29,23 @@ const Projects = ({ projects, getProjects }) => {
     }
 
     return (
-        <div>
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: '80px' }}>
-                <h1>Projects</h1>
-                <Button variant='primary' onClick={handleShow}>Add Project</Button>
+        <>
+            <div className='topContainer'>
+                <h1 className='projectsTitle'>Projects</h1>
+                <Button variant='success' onClick={handleShow}>Add Project</Button>
             </div>
 
             <AddProjectModal show={show} handleClose={handleClose} editedProjectData={editedProjectData} />
 
             {projects.length
-                ? projects && projects.map((project) => {
-                    return <Project key={project.id} {...project} editProject={editProject} />
+                ? projects && projects.map((project, i) => {
+                    return <Project key={i} {...project} editProject={editProject} />
                 })
                 : <p>You currently have no projects to view!</p>
             }
-        </div>
+        </>
     )
 }
-
 
 const mapDispatchToProps = {
     getProjects: getProjectList,
