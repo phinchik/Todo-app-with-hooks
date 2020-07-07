@@ -5,40 +5,49 @@ import Project from './Project'
 import AddProjectModal from '../AddProjectModal'
 import MultiSelect from "react-multi-select-component"
 import { getItemFromLocalStorage } from '../../redux/actions/helper'
+import './index.scss'
+import Button from 'react-bootstrap/Button'
 
 const Projects = ({ projects, getProjects }) => {
     const users = getItemFromLocalStorage('users')
-    console.log('users ????', users)
-    const usersForSelect = Object.values(getItemFromLocalStorage('users')).map((user) => ({ label: user.username, value: user.userId }))
-    console.log('users >>>>', users)
+    // const usersForSelect = Object.values(getItemFromLocalStorage('users')).map((user) => ({ label: user.username, value: user.userId }))
     const [show, setShow] = useState(false);
-    const [selected, setSelected] = useState([]);
+    // const [selected, setSelected] = useState([]);
+    const [editedProjectData, setEditedProjectData] = useState('')
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        setEditedProjectData('')
+    };
     const handleShow = () => setShow(true);
 
     useEffect(() => {
         getProjects()
     }, [])
 
+    const editProject = (id) => {
+        const projectEditData = projects && projects.filter((project) => {
+            return project.id === id
+        })
+        setEditedProjectData(projectEditData[0])
+        setShow(true)
+    }
+
     return (
         <div>
-            <div style={{ width: '400px' }}>
-                <p>Filter by creator:</p>
-                {usersForSelect && <MultiSelect
-                    options={usersForSelect}
-                    value={selected}
-                    onChange={setSelected}
-                />}
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: '80px' }}>
+                <h1>Projects</h1>
+                <Button variant='primary' onClick={handleShow}>Add Project</Button>
             </div>
-            <AddProjectModal show={show} handleClose={handleClose} />
 
-            {projects && projects.map((project) => {
-                const creator = users[project.userId]?.username
-                return <Project key={project.id} {...project} creator={creator} />
-            })}
+            <AddProjectModal show={show} handleClose={handleClose} editedProjectData={editedProjectData} />
 
-            <button onClick={handleShow}>Add Project</button>
+            {projects.length
+                ? projects && projects.map((project) => {
+                    return <Project key={project.id} {...project} editProject={editProject} />
+                })
+                : <p>You currently have no projects to view!</p>
+            }
         </div>
     )
 }

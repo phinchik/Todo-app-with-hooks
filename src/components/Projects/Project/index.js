@@ -2,8 +2,10 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { viewProject, deleteProject } from '../../../redux/actions/projects'
 import { connect } from 'react-redux'
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
 
-const Project = ({ name, todos, history, id, viewProject, deleteProject, creator }) => {
+const Project = ({ name, decsription, todos, history, id, viewProject, deleteProject, creator }) => {
     const goToProject = () => {
         const project = {
             name,
@@ -15,12 +17,20 @@ const Project = ({ name, todos, history, id, viewProject, deleteProject, creator
     }
 
     return (
-        <div style={{ cursor: 'pointer', marginBottom: '5px', border: '1px solid lightgray' }}>
-            <p>{name}</p>
-            <p>{`Number of todos: ${todos.length}`}</p>
-            <button onClick={goToProject}>View</button>
-            <button onClick={() => deleteProject(id)}>Delete</button>
-            <p>Created by: {creator}</p>
+        <div>
+            <Card style={{ margin: '2rem auto' }}>
+                <Card.Header as="h5">Name: {name}</Card.Header>
+                <Card.Body>
+                    <Card.Text>
+                        Description: {decsription}
+                    </Card.Text>
+                    <Card.Text>
+                        {`Number of todos: ${todos && todos.length}`}
+                        <Button onClick={() => goToProject()} variant="primary">View Project</Button>
+                        <Button onClick={() => deleteProject(id)} variant="primary">Delete Project</Button>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
         </div>
     )
 }

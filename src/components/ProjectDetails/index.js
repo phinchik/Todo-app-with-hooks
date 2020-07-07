@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import TodoList from '../TodoList'
+import Button from 'react-bootstrap/Button'
 import { connect } from 'react-redux'
 import { viewProject, updateViewProject, deleteTodo, saveProject } from '../../redux/actions/projects'
+import './index.scss'
 
 
-const ViewProject = ({ history, viewingProject, loggedInUser, viewProject, deleteTodo, updateView }) => {
+const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, deleteTodo, updateView }) => {
     const name = viewingProject?.name
     const todoList = viewingProject?.todos
     const projectId = viewingProject?.id
@@ -22,16 +24,28 @@ const ViewProject = ({ history, viewingProject, loggedInUser, viewProject, delet
             const allProjects = JSON.parse(localStorage.getItem('projects'))
             const project = allProjects[id]
             viewProject(project)
+            setTodos(project?.todos)
         } else {
             setTodos(todoList)
         }
     }, [])
 
+    useEffect(() => {
+
+    }, [todos])
     return (
-        <div>
-            <p onClick={() => history.push('/projects')}>{`< Back`}</p>
+        <div className="projectDetailRoot">
+            <Button onClick={() => history.push('/projects')} variant="primary"> {`Back To All Projects`}</Button>{' '}
             <h1>{name}</h1>
-            <TodoList updateViewProject={updateViewProject} todos={todoList || todos} loggedInUser={loggedInUser} projectId={projectId} setTodos={setTodos} deleteTodo={deleteTodo} />
+            <TodoList
+                updateViewProject={updateViewProject}
+                todos={todoList || todos}
+                loggedInUser={loggedInUser}
+                projectId={projectId}
+                setTodos={setTodos}
+                deleteTodo={deleteTodo}
+                projectName={name}
+                projectDetailPage={true} />
         </div>
     )
 }
@@ -48,4 +62,4 @@ const mapDispatchToProps = {
     updateView: updateViewProject
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewProject)
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetails)

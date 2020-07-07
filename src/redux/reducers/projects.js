@@ -40,6 +40,11 @@ export default (state = initialState, action) => {
             }
         }
         case UPDATE_VIEW_PROJECT:
+            return {
+                ...state,
+                viewingProject: action.payload,
+                list: action.updatedList
+            }
         case DELETE_TODO_SUCCESS: {
             return {
                 ...state,

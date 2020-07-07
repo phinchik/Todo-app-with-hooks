@@ -4,7 +4,7 @@ import history from './history'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import Projects from './components/Projects'
-import ViewProject from './components/ViewProject'
+import ProjectDetails from './components/ProjectDetails'
 import { connect } from 'react-redux'
 // import PublicRouteCurry from './publicRoute'
 // import PrivateRouteCurry from './privateRoute'
@@ -21,13 +21,14 @@ const AppRoutes = ({ setLoggedInUser }) => {
     }, [])
 
     return (
-        <div>
+        <div style={{ padding: '100px' }}>
             <BrowserRouter history={history}>
                 <Switch>
                     <Route path='/projects' exact={true} component={Projects} />
-                    <Route path='/projects/:id' exact={true} component={ViewProject} />
+                    <Route path='/projects/:id' exact={true} component={ProjectDetails} />
                     <Route path='/login' exact={true} component={Login} />
                     <Route path='/signup' exact={true} component={Signup} />
+                    <Route path='/' exact={true} component={Login} />
                 </Switch>
             </BrowserRouter>
         </div>

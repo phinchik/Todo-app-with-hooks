@@ -40,11 +40,13 @@ export const deleteTodo = (todoId, projectId) => {
 
 export const updateViewProject = (project) => {
     const projects = getItemFromLocalStorage('projects')
+    const updatedProjects = { ...projects, [project.id]: project }
 
-    saveToLocalStorage([{ key: 'projects', value: { ...projects, [project.id]: project } }])
+    saveToLocalStorage([{ key: 'projects', value: updatedProjects }])
+
 
     return dispatch => {
-        dispatch({ type: UPDATE_VIEW_PROJECT, payload: project })
+        dispatch({ type: UPDATE_VIEW_PROJECT, payload: project, updatedList: Object.values(updatedProjects) })
     }
 }
 
