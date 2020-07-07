@@ -98,38 +98,6 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
         onHandleSaveProject(updatedTodos)
     }
 
-    const handleCardAdd = (card, laneId) => {
-        setTodoDetails({
-            ...todoDetails,
-            title: card.title,
-            description: card.description,
-            selectState: laneId
-        })
-
-        const newTodo = {
-            description: card.description,
-            title: card.title,
-            state: laneId,
-            selectState: laneId,
-            id: card.id,
-            userId: loggedInUser.userId,
-            project: projectId
-        }
-        const updatedTodos = [
-            ...todos,
-            newTodo
-        ]
-
-        setTodoDetails({
-            description: '',
-            title: '',
-            selectState: 'todo'
-        })
-        onHandleSaveProject(updatedTodos)
-
-
-    }
-
     const onHandleSaveProject = (updatedTodos) => {
         const updatedProject = {
             name: projectName,
@@ -171,19 +139,6 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
         ]
     }
 
-    const onHandleTodoCard = (cardId, metadata, laneId) => {
-        const filteredList = todoList.filter((todo) => {
-            return todo.id === cardId
-        })
-        const todoDetails = filteredList[0]
-        setTodoDetails({
-            ...todoDetails,
-            id: cardId,
-            selectState: laneId
-        })
-        setAddingTodo(!addingTodo)
-    }
-
     const updateTodo = () => {
         const updatedTodos = todos.map((todo) => {
             if (todo.id === todoDetails.id) {
@@ -207,22 +162,22 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
             return <TodoForm selectState={data.laneId} updateTodo={updateTodo} addTodo={addTodo} setTodoDetail={setTodoDetail} {...todoDetails} data={data} />
         },
         NewLaneSection: () => <p>NewLane</p>,
-        Card: (x, y) => {
-            const cardId = x.id
-            const laneId = x.laneId
+        Card: (data) => {
+            const cardId = data.id
+            const laneId = data.laneId
             return (
                 <div style={{ background: 'white', margin: '0.5rem 0' }}>
                     <Card style={{ width: '18rem' }}>
                         <Card.Body>
-                            <Card.Title>Title: {x && x.title}</Card.Title>
+                            <Card.Title>Title: {data && data.title}</Card.Title>
                             <Card.Text>
-                                Description: {x.description}
+                                Description: {data.description}
                             </Card.Text>
                             <footer>
-                                Due Date: {x && moment(x.date).format("YYYY/MM/DD")}
+                                Due Date: {data && moment(data.date).format("YYYY/MM/DD")}
                             </footer>
-                            <a href='#' onClick={() => editForm(x)}>edit</a><br />
-                            <a href='#' onClick={() => x.onDelete(cardId, laneId)}>delete</a>
+                            <a href='#' onClick={() => editForm(data)}>edit</a><br />
+                            <a href='#' onClick={() => data.onDelete(cardId, laneId)}>delete</a>
                         </Card.Body>
 
                     </Card>
