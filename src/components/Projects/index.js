@@ -6,7 +6,7 @@ import AddProjectModal from '../AddProjectModal'
 import './index.scss'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import Sortable from 'sortablejs';
+
 
 const Projects = ({ projects, getProjects }) => {
     const [show, setShow] = useState(false);
@@ -37,12 +37,11 @@ const Projects = ({ projects, getProjects }) => {
         if (searchQuery) {
             return projects.filter(project => project[filter].includes(searchQuery))
         }
+
         return projects
     }
 
     const projectsToDisplay = getResultsFromQuery(projects)
-
-    console.log(projectsToDisplay, "<----- projectsToDisplay")
 
     return (
         <>
