@@ -4,9 +4,12 @@ import MultiSelect from "react-multi-select-component"
 import './index.scss'
 import EditTodoModal from '../EditTodoModal'
 import Board from '../Board'
+import Form from 'react-bootstrap/Form'
 
 const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName, saveProject, projectDescription }) => {
     const [selected, setSelected] = useState([]) /* filter */
+    const [searchQuery, setSearchQuery] = useState('')
+    const [filter, setFilter] = useState('title')
 
     const todoInitialState = {
         description: '',
@@ -63,7 +66,6 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
     ]
 
     const onHandleSaveProject = (updatedTodos) => {
-        console.log('updatedTodos >>>', updatedTodos)
         const updatedProject = {
             name: projectName,
             id: projectId,
@@ -72,7 +74,6 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
             date: todoDetails.date,
             decsription: projectDescription
         }
-        console.log('updatedProject -->', updatedProject)
         saveProject(updatedProject)
     }
 
@@ -94,8 +95,28 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
         setEdittingForm({ ...data, projectId })
     }
 
+
+    const getResultsFromQuery = (projects) => {
+        if (searchQuery) {
+            return projects.filter(project => project[filter].includes(searchQuery))
+        }
+        return projects
+    }
+
+    const projectsToDisplay = getResultsFromQuery(todos)
+
+
+
+
     return (
         <div>
+            <Form.Control className="formInput" placeholder='Search for project...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+            <Form.Label className="formLabel" >Filter by:</Form.Label>
+
+            <Form.Control className="dropDown" as="select" size="sm" custom onChange={e => setFilter(e.target.value)} >
+                <option value='title'>Title</option>
+                <option value='description'>Description</option>
+            </Form.Control>
             <EditTodoModal
                 updateTodo={updateTodo}
                 addTodo={addTodo}
@@ -103,11 +124,10 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
                 {...todoDetails}
                 edittingForm={edittingForm}
                 setEdittingForm={setEdittingForm} />
-
             <Board
                 projectId={projectId}
                 onHandleSaveProject={onHandleSaveProject}
-                todos={todos}
+                todos={projectsToDisplay}
                 selected={selected}
                 deleteTodo={deleteTodo}
                 updateTodo={updateTodo}

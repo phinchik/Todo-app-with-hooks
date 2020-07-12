@@ -26,7 +26,7 @@ const AppRoutes = ({ setLoggedInUser }) => {
     return (
         <BrowserRouter history={history}>
             <Switch>
-                <div style={{ background: 'dodgerblue' }}>
+                <div className="rootContainer" style={{ background: 'dodgerBlue' }}>
                     <NavBar />
                     <Container fluid={true} className='container'>
                         <Route path='/projects' exact={true} component={privateRoute(Projects)} />

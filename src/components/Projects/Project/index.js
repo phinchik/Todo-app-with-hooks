@@ -29,7 +29,7 @@ const Project = ({ name, decsription, todos, history, id, viewProject, deletePro
                 </Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        <p>{decsription}</p>
+                        <>{decsription}</>
                         <a href='#' onClick={() => goToProject()}>View</a>
                     </Card.Text>
                 </Card.Body>

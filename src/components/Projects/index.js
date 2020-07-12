@@ -6,12 +6,14 @@ import AddProjectModal from '../AddProjectModal'
 import './index.scss'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import Sortable from 'sortablejs';
 
 const Projects = ({ projects, getProjects }) => {
     const [show, setShow] = useState(false);
     const [editedProjectData, setEditedProjectData] = useState('')
     const [searchQuery, setSearchQuery] = useState('')
     const [filter, setFilter] = useState('name')
+    const [projectsList, setProjectList] = useState(projects)
 
     const handleClose = () => {
         setShow(false)
@@ -32,8 +34,6 @@ const Projects = ({ projects, getProjects }) => {
     }
 
     const getResultsFromQuery = (projects) => {
-        console.log('projects -->', projects)
-        console.log('filter -->', filter)
         if (searchQuery) {
             return projects.filter(project => project[filter].includes(searchQuery))
         }
@@ -41,6 +41,8 @@ const Projects = ({ projects, getProjects }) => {
     }
 
     const projectsToDisplay = getResultsFromQuery(projects)
+
+    console.log(projectsToDisplay, "<----- projectsToDisplay")
 
     return (
         <>
@@ -51,13 +53,14 @@ const Projects = ({ projects, getProjects }) => {
 
             <AddProjectModal show={show} handleClose={handleClose} editedProjectData={editedProjectData} />
 
-            <Form.Control style={{ marginBottom: '20px' }} placeholder='Search for project...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-            <Form.Label style={{ color: 'white' }}>Filter by:</Form.Label>
+            <Form.Control className='searchInput' placeholder='Search for project...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+            <Form.Label className="formLabel" >Filter by:</Form.Label>
 
-            <Form.Control as="select" size="sm" custom onChange={e => setFilter(e.target.value)} style={{ width: '200px', display: 'block' }}>
+            <Form.Control as="select" size="sm" custom onChange={e => setFilter(e.target.value)} className="projectDropDown" >
                 <option value='name'>Title</option>
                 <option value='decsription'>Description</option>
             </Form.Control>
+
 
             {projectsToDisplay.length
                 ? projectsToDisplay && projectsToDisplay.map((project, i) => {
@@ -65,6 +68,7 @@ const Projects = ({ projects, getProjects }) => {
                 })
                 : <p className='noProjects'>You currently have no projects to view!</p>
             }
+
         </>
     )
 }

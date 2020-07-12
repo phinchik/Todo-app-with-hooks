@@ -6,6 +6,7 @@ import { viewProject, updateViewProject, deleteTodo, saveProject } from '../../r
 import './index.scss'
 
 
+
 const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, deleteTodo, updateView, saveProject }) => {
     const name = viewingProject?.name
     const todoList = viewingProject?.todos
