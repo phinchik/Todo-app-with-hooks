@@ -4,7 +4,7 @@ import TodoForm from '../TodoForm'
 
 const EditTodoModal = ({ edittingForm, setEdittingForm, updateTodo, addTodo, setTodoDetail }) => {
     const todoId = edittingForm?.id
-    const projectId = edittingForm?.project
+    const projectId = edittingForm?.projectId
 
     return (
         <Modal size="xl" show={edittingForm} onHide={() => setEdittingForm(null)}>

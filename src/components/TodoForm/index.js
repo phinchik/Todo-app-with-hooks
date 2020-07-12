@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button'
 import { getItemFromLocalStorage } from '../../redux/actions/helper'
 import './index.scss'
 
-const TodoForm = ({ editTodo, addTodo, data, edit }) => {
+const TodoForm = ({ addTodo, data, edit, updateTodo }) => {
     useEffect(() => {
         // refactor... all we are trying to do is get todo data to edit
         const projects = getItemFromLocalStorage('projects')
@@ -20,7 +20,8 @@ const TodoForm = ({ editTodo, addTodo, data, edit }) => {
                 description: viewingTodo.description,
                 title: viewingTodo.title,
                 selectState: data?.laneId,
-                date: new Date()
+                date: viewingTodo?.date ? new Date(viewingTodo?.date) : new Date(),
+                id: viewingTodo?.id
             })
         }
     }, [])
@@ -29,7 +30,7 @@ const TodoForm = ({ editTodo, addTodo, data, edit }) => {
         description: '',
         title: '',
         selectState: data?.laneId,
-        date: new Date()
+        date: new Date(),
     }
 
     const [todoDetails, setTodoDetails] = useState(todoInitialState)
@@ -56,7 +57,7 @@ const TodoForm = ({ editTodo, addTodo, data, edit }) => {
                         onSelect={(e) => setTodoDetails({ ...todoDetails, date: e })} />
                 </Form.Group>
 
-                <Button onClick={() => edit ? editTodo(todoDetails) : addTodo(todoDetails)} variant='secondary'>{edit ? 'Update' : 'Add'}</Button><br />
+                <Button onClick={() => edit ? updateTodo(todoDetails) : addTodo(todoDetails)} variant='secondary'>{edit ? 'Update' : 'Add'}</Button><br />
             </Form>
         </div>
     )

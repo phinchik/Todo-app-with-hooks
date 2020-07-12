@@ -14,7 +14,6 @@ export const saveProject = (project) => {
         const allProjects = getItemFromLocalStorage('projects')
         const updatedProjects = { ...allProjects, [project.id]: project }
         saveToLocalStorage([{ key: 'projects', value: updatedProjects }])
-        console.log('saved to local storage')
         dispatch({ type: SAVE_PROJECT_SUCCESS, payload: { project, list: Object.values(updatedProjects) } })
 
     }

@@ -11,6 +11,14 @@ const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, de
     const todoList = viewingProject?.todos
     const projectId = viewingProject?.id
     const description = viewingProject?.decsription
+    const [edit, setEdit] = useState(null)
+
+    const defaultEditState = {
+        name: null,
+        description: null,
+    }
+
+    const [editFields, setEditFields] = useState(defaultEditState)
 
     const updateViewProject = (updatedTodos) => {
         const project = { ...viewingProject, todos: updatedTodos }
@@ -27,16 +35,81 @@ const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, de
         }
     }, [])
 
+    const editField = (fieldName) => {
+        setEdit(fieldName)
+    }
+
+    const cancelEdit = () => {
+        setEdit(null)
+        setEditFields(defaultEditState)
+    }
+
+    const saveUpdatedProject = () => {
+        const updatedProject = {
+            name: editFields.name || name,
+            id: projectId,
+            userId: loggedInUser.userId,
+            todos: todoList,
+            decsription: editFields.description || description
+        }
+
+        saveProject(updatedProject)
+        setEdit(null)
+        setEditFields(defaultEditState)
+    }
+
+    const setEditValue = (e) => {
+        const id = e.target.id
+        const value = e.target.value
+
+        setEditFields({
+            ...editFields,
+            [id]: value
+        })
+    }
+
     return (
         <>
             <Button onClick={() => history.push('/projects')}>Back</Button>
-            <h1 className='projectName'>{name}</h1>
-            <p className='projectDescription'>{description}</p>
+            {edit === 'name'
+                ? (
+                    <>
+                        <input value={editFields?.name || name} id='name' onChange={setEditValue} style={{ width: '300px', fontSize: '2.5rem', marginTop: '40px', marginBottom: '10px', display: 'block' }} />
+                        <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '30px' }}>
+                            <Button style={{ marginRight: '10px' }} variant='success' onClick={saveUpdatedProject}> Save</Button>
+                            <Button variant='secondary' onClick={cancelEdit}>Cancel</Button>
+                        </div>
+                    </>
+                )
+                : (
+                    <>
+                        <h1 className='projectName'>{name} <Button style={{ fontSize: '12px' }} onClick={() => editField('name')}>Edit</Button></h1>
+                    </>
+                )
+            }
+
+            {edit === 'description'
+                ? (
+                    <>
+                        <textarea id='description' value={editFields?.description || description} onChange={setEditValue} style={{ width: '300px', height: '200px' }} />
+                        <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '30px' }}>
+                            <Button style={{ marginRight: '10px' }} variant='success' onClick={saveUpdatedProject}> Save</Button>
+                            <Button variant='secondary' onClick={cancelEdit}>Cancel</Button>
+                        </div>
+                    </>
+                )
+                : (
+                    <>
+                        <p className='projectDescription'>{description} <Button style={{ fontSize: '12px' }} onClick={() => editField('description')}>Edit</Button></p>
+                    </>
+                )
+            }
             <TodoList
                 updateViewProject={updateViewProject}
                 todos={todoList}
                 loggedInUser={loggedInUser}
                 projectId={projectId}
+                projectDescription={description}
                 deleteTodo={deleteTodo}
                 projectName={name}
                 saveProject={saveProject}

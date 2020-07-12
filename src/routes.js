@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import history from './history'
 import Login from './components/Login'
 import Signup from './components/Signup'
@@ -33,6 +33,7 @@ const AppRoutes = ({ setLoggedInUser }) => {
                         <Route path='/projects/:id' exact={true} component={privateRoute(ProjectDetails)} />
                         <Route path='/login' exact={true} component={publicRoute(Login)} />
                         <Route path='/signup' exact={true} component={publicRoute(Signup)} />
+                        <Redirect to='/projects' />
                     </Container>
                 </div>
             </Switch>

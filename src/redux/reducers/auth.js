@@ -3,7 +3,6 @@ import {
     SET_LOGGED_IN_USER,
     LOG_OUT_SUCCESS
 } from '../actions/types'
-import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
     loggedInUser: null,
