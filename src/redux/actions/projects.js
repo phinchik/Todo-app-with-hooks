@@ -4,7 +4,7 @@ import { saveToLocalStorage } from './helper'
 
 export const getProjectList = () => {
     return dispatch => {
-        const projects = Object.values(getItemFromLocalStorage('projects'))
+        const projects = Object.values(getItemFromLocalStorage('projects')) // this should have been an array (sorting purposes)!!! 
         dispatch({ type: GET_PROJECTS_SUCCESS, payload: projects })
     }
 }

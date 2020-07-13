@@ -10,6 +10,8 @@ const Board = ({ todos, updateTodo, addTodo, setTodoDetail, todoDetails, editFor
     }
 
     const onCardMoveAcrossLanes = (fromLaneId, toLaneId, cardId) => {
+        if (fromLaneId === toLaneId) return
+
         const updatedTodos = todos.map((todo) => {
             if (todo.id === cardId) {
                 return { ...todo, selectState: toLaneId }
@@ -45,6 +47,27 @@ const Board = ({ todos, updateTodo, addTodo, setTodoDetail, todoDetails, editFor
                 cards: getCards("done")
             }
         ]
+    }
+
+    const arrayMove = (arr, fromIndex, toIndex) => {
+        const element = arr[fromIndex]
+        arr.splice(fromIndex, 1)
+        arr.splice(toIndex, 0, element);
+
+        return arr
+    }
+
+    const updateCardIndex = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
+        let fromIndex = null
+
+        todos.forEach((todo, i) => {
+            if (todo.id === cardDetails.id) {
+                fromIndex = i
+            }
+        })
+
+        const updatedTodos = arrayMove(todos, fromIndex, position)
+        onHandleSaveProject(updatedTodos)
     }
 
     const components = {
@@ -84,6 +107,7 @@ const Board = ({ todos, updateTodo, addTodo, setTodoDetail, todoDetails, editFor
             editable
             className='board'
             components={components}
+            handleDragEnd={updateCardIndex}
         />
     )
 }

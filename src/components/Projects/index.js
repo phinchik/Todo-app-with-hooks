@@ -6,14 +6,13 @@ import AddProjectModal from '../AddProjectModal'
 import './index.scss'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-
+import { ReactSortable } from "react-sortablejs"
 
 const Projects = ({ projects, getProjects }) => {
     const [show, setShow] = useState(false);
     const [editedProjectData, setEditedProjectData] = useState('')
     const [searchQuery, setSearchQuery] = useState('')
     const [filter, setFilter] = useState('name')
-    const [projectsList, setProjectList] = useState(projects)
 
     const handleClose = () => {
         setShow(false)
@@ -43,6 +42,10 @@ const Projects = ({ projects, getProjects }) => {
 
     const projectsToDisplay = getResultsFromQuery(projects)
 
+    const setList = (projects) => {
+
+    }
+
     return (
         <>
             <div className='topContainer'>
@@ -60,14 +63,11 @@ const Projects = ({ projects, getProjects }) => {
                 <option value='decsription'>Description</option>
             </Form.Control>
 
-
-            {projectsToDisplay.length
-                ? projectsToDisplay && projectsToDisplay.map((project, i) => {
-                    return <Project key={i} {...project} editProject={editProject} />
-                })
-                : <p className='noProjects'>You currently have no projects to view!</p>
-            }
-
+            <ReactSortable list={projectsToDisplay} setList={setList}>
+                {projectsToDisplay.map((project, i) => {
+                    return <Project key={project.id} {...project} editProject={editProject} />
+                })}
+            </ReactSortable>
         </>
     )
 }

@@ -5,7 +5,7 @@ import {
     VIEW_PROJECT,
     DELETE_TODO_SUCCESS,
     UPDATE_VIEW_PROJECT,
-    DELETE_PROJECT_SUCCESS
+    DELETE_PROJECT_SUCCESS,
 } from '../actions/types'
 
 const initialState = {
