@@ -6,13 +6,14 @@ import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import './index.scss'
 
-const Project = ({ name, decsription, todos, history, id, viewProject, deleteProject }) => {
+const Project = ({ name, description, todos, history, id, viewProject, deleteProject }) => {
+    console.log('name >>>>', name)
     const goToProject = () => {
         const project = {
             name,
             todos,
             id,
-            decsription
+            description
         }
         viewProject(project)
         history.push(`/projects/${id}`)
@@ -29,8 +30,8 @@ const Project = ({ name, decsription, todos, history, id, viewProject, deletePro
                 </Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        <>{decsription}</>
-                        <a href='#' onClick={() => goToProject()}>View</a>
+                        <>{description}</>
+                        <a style={{ display: 'block', marginTop: '5px' }} href='#' onClick={() => goToProject()}>View</a>
                     </Card.Text>
                 </Card.Body>
             </Card>

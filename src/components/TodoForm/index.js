@@ -10,9 +10,12 @@ const TodoForm = ({ addTodo, data, edit, updateTodo }) => {
     useEffect(() => {
         // refactor... all we are trying to do is get todo data to edit
         const projects = getItemFromLocalStorage('projects')
-        const project = projects[edit?.projectId]
+        const project = projects.find((project) => {
+            return project.id === edit?.projectId
+        })
+
         const viewingTodo = project?.todos?.find((todo) => {
-            return todo.id !== edit?.id
+            return todo.id === edit?.todoId
         })
 
         if (viewingTodo) {

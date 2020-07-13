@@ -6,7 +6,7 @@ import EditTodoModal from '../EditTodoModal'
 import Board from '../Board'
 import Form from 'react-bootstrap/Form'
 
-const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName, saveProject, projectDescription }) => {
+const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName, saveProject, projectDescription, projectDetails }) => {
     const [selected, setSelected] = useState([]) /* filter */
     const [searchQuery, setSearchQuery] = useState('')
     const [filter, setFilter] = useState('title')
@@ -72,8 +72,9 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
             userId: loggedInUser.userId,
             todos: updatedTodos,
             date: todoDetails.date,
-            decsription: projectDescription
+            description: projectDescription
         }
+
         saveProject(updatedProject)
     }
 
@@ -110,7 +111,7 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
 
     return (
         <div>
-            <Form.Control className="formInput" placeholder='Search for project...' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+            <Form.Control className="formInput" placeholder={projectDetails ? `Search for todos...` : `Search for project...`} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
             <Form.Label className="formLabel" >Filter by:</Form.Label>
 
             <Form.Control className="dropDown" as="select" size="sm" custom onChange={e => setFilter(e.target.value)} >
@@ -124,6 +125,8 @@ const TodoList = ({ todos = [], loggedInUser, projectId, deleteTodo, projectName
                 {...todoDetails}
                 edittingForm={edittingForm}
                 setEdittingForm={setEdittingForm} />
+
+            <div style={{ marginTop: '40px' }} />
             <Board
                 projectId={projectId}
                 onHandleSaveProject={onHandleSaveProject}

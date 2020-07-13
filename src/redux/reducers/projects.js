@@ -6,6 +6,7 @@ import {
     DELETE_TODO_SUCCESS,
     UPDATE_VIEW_PROJECT,
     DELETE_PROJECT_SUCCESS,
+    UPDATE_PROJECT_ORDER_SUCCESS
 } from '../actions/types'
 
 const initialState = {
@@ -56,6 +57,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 list: state.list.filter(project => project.id !== action.payload)
+            }
+        case UPDATE_PROJECT_ORDER_SUCCESS:
+            return {
+                ...state,
+                list: action.payload
             }
         default:
             return state

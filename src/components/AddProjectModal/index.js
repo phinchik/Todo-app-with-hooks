@@ -28,7 +28,7 @@ const AddProjectModal = ({ show, handleClose, loggedInUser, addProject, editedPr
             name: projectName,
             id: uuidv4(),
             userId: loggedInUser.userId,
-            decsription: projectDescription,
+            description: projectDescription,
             todos
         }
         if (projectName === '') {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
-import { getProjectList } from '../../redux/actions/projects'
+import { getProjectList, updateProjectOrder } from '../../redux/actions/projects'
 import Project from './Project'
 import AddProjectModal from '../AddProjectModal'
 import './index.scss'
@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { ReactSortable } from "react-sortablejs"
 
-const Projects = ({ projects, getProjects }) => {
+const Projects = ({ projects, getProjects, updateOrder }) => {
     const [show, setShow] = useState(false);
     const [editedProjectData, setEditedProjectData] = useState('')
     const [searchQuery, setSearchQuery] = useState('')
@@ -41,9 +41,9 @@ const Projects = ({ projects, getProjects }) => {
     }
 
     const projectsToDisplay = getResultsFromQuery(projects)
-
     const setList = (projects) => {
-
+        if (!projects.length) return // only call function when we are updating order
+        updateOrder(projects)
     }
 
     return (
@@ -60,11 +60,12 @@ const Projects = ({ projects, getProjects }) => {
 
             <Form.Control as="select" size="sm" custom onChange={e => setFilter(e.target.value)} className="projectDropDown" >
                 <option value='name'>Title</option>
-                <option value='decsription'>Description</option>
+                <option value='description'>Description</option>
             </Form.Control>
 
             <ReactSortable list={projectsToDisplay} setList={setList}>
-                {projectsToDisplay.map((project, i) => {
+                {projectsToDisplay && projectsToDisplay.map((project, i) => {
+                    console.log('project -->', project)
                     return <Project key={project.id} {...project} editProject={editProject} />
                 })}
             </ReactSortable>
@@ -74,6 +75,8 @@ const Projects = ({ projects, getProjects }) => {
 
 const mapDispatchToProps = {
     getProjects: getProjectList,
+    updateOrder: updateProjectOrder
+
 }
 
 const mapStateToProps = (state) => ({

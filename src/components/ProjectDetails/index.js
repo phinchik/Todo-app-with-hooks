@@ -11,7 +11,7 @@ const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, de
     const name = viewingProject?.name
     const todoList = viewingProject?.todos
     const projectId = viewingProject?.id
-    const description = viewingProject?.decsription
+    const description = viewingProject?.description
     const [edit, setEdit] = useState(null)
 
     const defaultEditState = {
@@ -31,7 +31,9 @@ const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, de
             /* refactor this */
             const id = history.location.pathname.split('/')[2]
             const allProjects = JSON.parse(localStorage.getItem('projects'))
-            const project = allProjects[id]
+            const project = allProjects.find((project) => {
+                return project.id === id
+            })
             viewProject(project)
         }
     }, [])
@@ -51,7 +53,7 @@ const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, de
             id: projectId,
             userId: loggedInUser.userId,
             todos: todoList,
-            decsription: editFields.description || description
+            description: editFields.description || description
         }
 
         saveProject(updatedProject)
@@ -106,6 +108,7 @@ const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, de
                 )
             }
             <TodoList
+                projectDetails={true}
                 updateViewProject={updateViewProject}
                 todos={todoList}
                 loggedInUser={loggedInUser}
