@@ -36,7 +36,6 @@ const Projects = ({ projects, getProjects, updateOrder }) => {
         if (searchQuery) {
             return projects.filter(project => project[filter].includes(searchQuery))
         }
-
         return projects
     }
 
@@ -65,7 +64,6 @@ const Projects = ({ projects, getProjects, updateOrder }) => {
 
             <ReactSortable list={projectsToDisplay} setList={setList}>
                 {projectsToDisplay && projectsToDisplay.map((project, i) => {
-                    console.log('project -->', project)
                     return <Project key={project.id} {...project} editProject={editProject} />
                 })}
             </ReactSortable>

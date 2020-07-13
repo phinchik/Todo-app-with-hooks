@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button'
 import './index.scss'
 
 const Project = ({ name, description, todos, history, id, viewProject, deleteProject }) => {
-    console.log('name >>>>', name)
     const goToProject = () => {
         const project = {
             name,

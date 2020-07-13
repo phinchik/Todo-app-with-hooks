@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import { setLoggedInUser } from '../../redux/actions/auth'
 import { connect } from 'react-redux'
+import './index.scss'
 
 const Login = ({ history, setLoggedInUser }) => {
     const [username, setUsername] = useState('')
@@ -34,12 +35,10 @@ const Login = ({ history, setLoggedInUser }) => {
     const validateInput = username !== '' && password !== ''
     return (
         <div>
-            <Container style={{ margin: '0 auto' }}>
+            <Container className="loginContainer" >
                 <Row className="justify-content-md-center">
                     <Col xs={12} sm={12} md={8} lg={6} >
-                        <Card border="primary" style={{
-                            width: '100%', margin: '10rem auto', padding: '20px'
-                        }}>
+                        <Card border="primary" className="loginCard" >
                             <h1>Login</h1>
                             <Form>
                                 <Form.Group controlId="formBasicEmail">

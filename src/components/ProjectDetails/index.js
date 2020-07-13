@@ -77,7 +77,7 @@ const ProjectDetails = ({ history, viewingProject, loggedInUser, viewProject, de
             {edit === 'name'
                 ? (
                     <>
-                        <input value={editFields?.name || name} id='name' onChange={setEditValue} style={{ width: '300px', fontSize: '2.5rem', marginTop: '40px', marginBottom: '10px', display: 'block' }} />
+                        <input value={editFields?.name || name} id='name' onChange={setEditValue} className="nameInput" />
                         <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '30px' }}>
                             <Button style={{ marginRight: '10px' }} variant='success' onClick={saveUpdatedProject}> Save</Button>
                             <Button variant='secondary' onClick={cancelEdit}>Cancel</Button>

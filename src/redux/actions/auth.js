@@ -10,15 +10,14 @@ export const signUp = (allUsers, newUser) => {
     return (dispatch) => {
         const updatedUsers = { ...allUsers, [newUser.username]: newUser }
         const projectId = uuidv4()
-        const projects = [
-            {
-                userId: newUser.userId,
-                name: "Default",
-                todos: [],
-                id: projectId,
-                description: ''
-            }
-        ]
+        const projects = {
+            userId: newUser.userId,
+            name: "Default",
+            todos: [],
+            id: projectId,
+            description: ''
+        }
+
         saveToLocalStorage([
             { key: 'users', value: updatedUsers },
             { key: 'projects', value: projects },
